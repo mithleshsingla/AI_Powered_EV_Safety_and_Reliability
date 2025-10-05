@@ -364,8 +364,14 @@ feature_cols = [
 ## 📸 Screenshots
 
 ### Dashboard Overview
+Input Parameters
 ![Dashboard](docs/deployment/1.png)
-
+overall Dashboard Overview
+![Dashboard2](docs/deployment/2.png)
+RL_recommendation
+![Dashboard3](docs/deployment/3.png)
+Visual_Indicators
+![Dashboard4](docs/deployment/4.png)
 ### RL Agent Training
 ![RL Reward Progress](docs/rl_agent/reward_1.png)
 ![Safety Violations Comparison](docs/rl_agent/violations.png)
