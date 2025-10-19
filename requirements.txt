@@ -1,17 +1,19 @@
-# Core ML & Data
+# Core Data Science
 numpy
 pandas
 scikit-learn
 xgboost
 joblib
-
-# Streamlit dashboard
+# Web UI
 streamlit
-
-# Airflow & DB connectivity
+plotly
+# Database & APIs
 sqlalchemy
-
-# Optional (but useful for extended pipelines)
 requests
+# Configuration
 pyyaml
-
+# Airflow
+apache-airflow
+# Additional utilities
+python-dotenv
+pendulum
