@@ -179,7 +179,7 @@ Battery Data (CSV)
 ```
 
 ### ETL Pipeline (Apache Airflow)
-![Airflow](docs/deployment/5.png)
+![Airflow](docs/deployment/airflow.png)
 
 ---
 
