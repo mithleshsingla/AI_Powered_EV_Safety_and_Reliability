@@ -4,8 +4,9 @@
 [![XGBoost](https://img.shields.io/badge/XGBoost-Anomaly%20Detection-green.svg)](https://xgboost.readthedocs.io/)
 [![Reinforcement Learning](https://img.shields.io/badge/RL-Q--Learning-orange.svg)](https://en.wikipedia.org/wiki/Q-learning)
 [![Streamlit](https://img.shields.io/badge/Streamlit-Dashboard-red.svg)](https://streamlit.io/)
+[![Apache Airflow](https://img.shields.io/badge/Apache%20Airflow-ETL%20Orchestration-blue.svg)](https://airflow.apache.org/)
 
-> **VidyutAI Hackathon 2025 - Problem Statement(#-problem-statement)**  
+> **VidyutAI Hackathon 2025 - Problem Statement**  
 > A comprehensive data-driven backend system powered by AI/ML and Reinforcement Learning to predict EV battery safety risks, generate Battery Health Index (BHI), and recommend optimal charging strategies.
 
 
@@ -59,7 +60,15 @@ Our system combines **XGBoost anomaly detection** with **Q-Learning Reinforcemen
 - **747% reward improvement** over random policy
 - **86% safety improvement** over aggressive charging
 
-### 4. **Interactive Dashboard (Streamlit)**
+### 4. **ETL Pipeline (Apache Airflow)**
+- Automated daily inference pipeline orchestration
+- Feature engineering with derivative calculations
+- Real-time XGBoost anomaly detection
+- RL-based charging action recommendations
+- Results aggregation and persistence
+- Monitoring and alerting capabilities
+
+### 5. **Interactive Dashboard (Streamlit)**
 - Real-time battery monitoring
 - Visual gauges for voltage and temperature
 - RL-driven charging recommendations
@@ -77,42 +86,52 @@ Our system combines **XGBoost anomaly detection** with **Q-Learning Reinforcemen
                        │
                        ▼
 ┌─────────────────────────────────────────────────────────────┐
-│                  Isolation Forest (Anomaly Detection)        │
-│  • 5% contamination                                         │
-│  • Initial labeling of abnormal data                        │
-│  • Hardcoded threshold-based rules                          │
+│              ETL Pipeline (Apache Airflow DAG)               │
+│                                                              │
+│  ┌───────────────────────────────────────────────────────┐  │
+│  │ Task 1: Feature Engineering                           │  │
+│  │  • Load CSV data                                      │  │
+│  │  • Select core features (7 features)                  │  │
+│  │  • Calculate derivatives (voltage, temperature)       │  │
+│  │  • Handle null values and normalization               │  │
+│  └───────────────────────────────────────────────────────┘  │
+│                        │                                     │
+│                        ▼                                     │
+│  ┌───────────────────────────────────────────────────────┐  │
+│  │ Task 2: XGBoost Anomaly Detection                     │  │
+│  │  • Load trained model                                 │  │
+│  │  • Generate anomaly scores & predictions              │  │
+│  │  • Calculate BHI (Battery Health Index)               │  │
+│  │  • Classify risk levels (Low/Medium/High)             │  │
+│  │  • Detect specific anomalies                          │  │
+│  └───────────────────────────────────────────────────────┘  │
+│                        │                                     │
+│                        ▼                                     │
+│  ┌───────────────────────────────────────────────────────┐  │
+│  │ Task 3: RL Agent Prediction                           │  │
+│  │  • Load Q-Learning model                              │  │
+│  │  • Discretize battery states                          │  │
+│  │  • Generate action recommendations                    │  │
+│  │  • Map actions (STOP/TRICKLE/NORMAL/FAST)            │  │
+│  └───────────────────────────────────────────────────────┘  │
+│                        │                                     │
+│                        ▼                                     │
+│  ┌───────────────────────────────────────────────────────┐  │
+│  │ Task 4: Results Aggregation                           │  │
+│  │  • Combine all predictions                            │  │
+│  │  • Generate summary statistics                        │  │
+│  │  • Save JSON output for dashboard                     │  │
+│  └───────────────────────────────────────────────────────┘  │
+│                                                              │
 └──────────────────────┬──────────────────────────────────────┘
                        │
                        ▼
-┌─────────────────────────────────────────────────────────────┐
-│                  Feature Engineering                        │
-│  • Derivative Calculation (voltage, temperature)             │
-│  • Mode-based Feature Handling (Charge/Discharge/Idle)       │
-│  • Null Value Management                                    │
-└──────────────────────┬──────────────────────────────────────┘
-                       │
-                       ▼
-            ┌──────────────────────┐
-            │  XGBoost Anomaly     │
-            │  Detection Model     │
-            │                      │
-            │  • 98.66% Accuracy   │
-            │  • ROC-AUC: 0.9994   │
-            └──────────┬───────────┘
-                       │
-                       ▼
            ┌────────────────────────┐
-           │   BHI Calculation      │
-           │   Risk Classification  │
-           └────────────┬───────────┘
-                        │
-                        ▼
-           ┌────────────────────────┐
-           │  Q-Learning RL Agent   │
-           │                        │
-           │  • 4 Actions           │
-           │  • Simulated Dynamics  │
-           │  • 2000 Episodes       │
+           │   Persistent Storage   │
+           │   • Transformed Data   │
+           │   • Anomaly Results    │
+           │   • RL Actions         │
+           │   • Summary JSON       │
            └────────────┬───────────┘
                         │
                         ▼
@@ -122,8 +141,45 @@ Our system combines **XGBoost anomaly detection** with **Q-Learning Reinforcemen
            │  • Real-time Monitoring│
            │  • Recommendations     │
            │  • Safety Alerts       │
+           │  • Historical Analysis │
            └────────────────────────┘
 ```
+
+### ETL Pipeline Workflow
+
+```
+Battery Data (CSV)
+        │
+        ▼
+   ┌─────────────┐
+   │   Feature   │  → Normalized features + derivatives
+   │ Engineering │
+   └──────┬──────┘
+          │
+          ▼
+   ┌─────────────────────┐
+   │   XGBoost Model     │  → Anomaly scores + BHI + Risk
+   │  Anomaly Detection  │
+   └──────┬──────────────┘
+          │
+          ▼
+   ┌─────────────────────┐
+   │  Q-Learning Agent   │  → Charging actions (STOP/TRICKLE/NORMAL/FAST)
+   │  RL Recommendation  │
+   └──────┬──────────────┘
+          │
+          ▼
+   ┌─────────────────────┐
+   │   Results Summary   │  → JSON for Streamlit
+   │   & Persistence    │
+   └──────┬──────────────┘
+          │
+          ▼
+   Dashboard Visualization
+```
+
+### ETL Pipeline (Apache Airflow)
+![Airflow](docs/deployment/5.png)
 
 ---
 
@@ -144,18 +200,18 @@ Our system combines **XGBoost anomaly detection** with **Q-Learning Reinforcemen
 | **Recall (Anomaly)** | 1.00 |
 | **F1-Score (Anomaly)** | 0.92 |
 
-### 🧩 Confusion Matrix (Battery Risk Classification)
+### Confusion Matrix (Battery Risk Classification)
 
 |                | **Predicted: Safe** | **Predicted: Risk** |
 |----------------|---------------------|---------------------|
-| **Actual: Safe ✅** | **9,778,159**  <br>_True Negatives_ | **140,495**  <br>_False Positives_ |
-| **Actual: Risk ⚠️** | **2,862**  <br>_False Negatives_ | **782,317**  <br>_True Positives_ |
+| **Actual: Safe** | **9,778,159**  <br>_True Negatives_ | **140,495**  <br>_False Positives_ |
+| **Actual: Risk** | **2,862**  <br>_False Negatives_ | **782,317**  <br>_True Positives_ |
 
 **Summary**
-- ✅ **True Negatives:** 9,778,159  
-- ⚠️ **True Positives:** 782,317  
-- ❌ **False Positives:** 140,495  
-- 🚫 **False Negatives:** 2,862  
+- True Negatives: 9,778,159  
+- True Positives: 782,317  
+- False Positives: 140,495  
+- False Negatives: 2,862
 
 ### Top 10 Feature Importance
 
@@ -181,9 +237,9 @@ Our system combines **XGBoost anomaly detection** with **Q-Learning Reinforcemen
 | Always Fast Charge | -147.30 ± 1118.87 | 29.43% | 64.97 |
 
 #### RL Improvements
-- ✅ **+747.64%** reward improvement over random policy
-- ✅ **+85.90%** safety improvement (fewer violations)
-- ✅ **+1.72** BHI preservation over aggressive charging
+- **+747.64%** reward improvement over random policy
+- **+85.90%** safety improvement (fewer violations)
+- **+1.72** BHI preservation over aggressive charging
 
 #### Learned Action Distribution
 - Fast Charge: 0.01% (14 actions)
@@ -191,17 +247,16 @@ Our system combines **XGBoost anomaly detection** with **Q-Learning Reinforcemen
 - Trickle Charge: 61.55% (61,550 actions) ⭐
 - Pause Charging: 25.81% (25,811 actions)
 
-> **Key Insight**: The RL agent learned to prefer safer Trickle Charge and strategic Pause actions over aggressive Fast Charge.
-
 ---
 
 ## 🛠️ Installation
 
 ### Prerequisites
 - Python 3.11+
+- Docker & Docker Compose
 - pip package manager
 
-### Setup
+### Setup (Local Development)
 
 1. **Clone the repository**
 ```bash
@@ -209,7 +264,7 @@ git clone https://github.com/yourusername/ev-battery-safety.git
 cd ev-battery-safety
 ```
 
-2. **Create virtual environment** (recommended)
+2. **Create virtual environment**
 ```bash
 python -m venv venv
 source venv/bin/activate  # On Windows: venv\Scripts\activate
@@ -220,17 +275,22 @@ source venv/bin/activate  # On Windows: venv\Scripts\activate
 pip install -r requirements.txt
 ```
 
-### Required Dependencies
-```txt
-pandas
-numpy
-scikit-learn
-xgboost
-streamlit
-plotly
-matplotlib
+### Setup (Docker - Production)
+
+1. **Initialize Astro project**
+```bash
+astro dev init
 ```
 
+2. **Copy DAG file**
+```bash
+cp dags/battery_inference_pipeline.py dags/
+```
+
+3. **Start Airflow containers**
+```bash
+astro dev start
+```
 ---
 
 ## 🎮 Usage
@@ -243,7 +303,27 @@ Open and run `solution.ipynb` to:
 - Train Q-Learning RL agent
 - Generate performance metrics and visualizations
 
-### 2. Running the Dashboard
+### 2. Running ETL Pipeline (Airflow)
+
+#### Start Airflow
+```bash
+astro dev start
+```
+
+#### Trigger DAG
+1. Navigate to http://localhost:8080
+2. Find **"battery_inference_pipeline"** DAG
+3. Click the Play button to trigger
+4. Monitor execution in real-time
+5. View logs for debugging
+
+#### Pipeline Stages
+- **Stage 1**: Feature Engineering (5-10 seconds)
+- **Stage 2**: XGBoost Anomaly Detection (10-15 seconds)
+- **Stage 3**: RL Agent Prediction (5-10 seconds)
+- **Stage 4**: Results Aggregation (2-5 seconds)
+
+### 3. Running the Dashboard
 
 ```bash
 streamlit run app.py
@@ -251,19 +331,15 @@ streamlit run app.py
 
 The dashboard will open in your browser at `http://localhost:8501`
 
-### 3. Using the Dashboard
+### 4. Using the Dashboard
 
-**Inputs:**
-- Select **Operating Mode** (Charging/Idle/Discharging)
-- Adjust **Voltage** slider (4.0V - 9.5V)
-- Adjust **Temperature** slider (-25°C - 80°C)
-
-**Outputs:**
-- Battery Health Index (BHI)
-- Anomaly Detection Result
-- Risk Level Classification
-- RL Charging Recommendation (in Charging mode)
-- Safety Alerts and Warnings
+**Features:**
+- Real-time battery monitoring
+- Anomaly detection alerts
+- RL-based charging recommendations
+- Safety risk indicators
+- Historical trend analysis
+- Diagnostic system status
 
 ---
 
@@ -272,23 +348,24 @@ The dashboard will open in your browser at `http://localhost:8501`
 ```
 ├── VidyutAI Hackathon 2025 Problem Statement 1.pdf
 ├── app.py                          # Streamlit dashboard application
+├── dags/
+│   └── battery_inference_pipeline.py    # Airflow DAG for ETL
+├── include/
+│   ├── data/
+│   │   └── battery20.csv          # Sample battery data
+│   ├── models/
+│   │   ├── q_learning_battery_model.pkl
+│   │   └── xgboost_anomaly_model.json
+│   └── results/
+│       ├── transformed_data.csv
+│       ├── anomaly_detected_data.csv
+│       └── inference_results.json
 ├── docs/
-│   ├── deployment/                 # Deployment screenshots
-│   │   ├── 1.png
-│   │   ├── 2.png
-│   │   ├── 3.png
-│   │   └── 4.png
-│   └── rl_agent/                   # RL training visualizations
-│       ├── exploration_rate.png
-│       ├── policy.png
-│       ├── reward2.png
-│       ├── reward_1.png
-│       └── violations.png
-├── q_learning_battery_model.pkl    # Trained Q-Learning model
-├── solution.ipynb                  # Complete solution notebook
-├── xgboost_anomaly_model.json      # XGBoost model (JSON format)
-├── xgboost_anomaly_model.pkl       # XGBoost model (Pickle format)
-└── README.md                       # This file
+│   ├── deployment/                # Images for streamlit application 
+│   └── rl_agent/                  # Images of trained RL agent
+├── requirements.txt
+├── solution.ipynb                 # Complete solution notebook
+└── README.md                      # This file
 ```
 
 ---
@@ -304,10 +381,18 @@ The dashboard will open in your browser at `http://localhost:8501`
 - **Pandas**: Data manipulation and analysis
 - **NumPy**: Numerical computations
 
+### ETL & Orchestration
+- **Apache Airflow**: DAG-based pipeline orchestration
+- **Astronomer CLI**: Airflow development environment
+
 ### Visualization & Dashboard
 - **Streamlit**: Interactive web dashboard
 - **Plotly**: Interactive charts and gauges
 - **Matplotlib**: Static visualizations
+
+### Deployment
+- **Docker**: Containerization
+- **Docker Compose**: Multi-container orchestration
 
 ### Development Tools
 - **Jupyter Notebook**: Model development and experimentation
@@ -364,43 +449,46 @@ feature_cols = [
 ## 📸 Screenshots
 
 ### Dashboard Overview
-### Input Parameters
 ![Dashboard](docs/deployment/1.png)
----
-### Overall Dashboard Overview
+
+### Full Dashboard View
 ![Dashboard2](docs/deployment/2.png)
----
-### RL_recommendation
+
+### RL Recommendations
 ![Dashboard3](docs/deployment/3.png)
----
-### Visual_Indicators
+
+### Visual Indicators
 ![Dashboard4](docs/deployment/4.png)
----
-### ETL using Apache AIRFLOW
-![Dashboard4](docs/deployment/airflow.png)
----
-### Temprature and BHI Distribution
-![Dashboard4](docs/deployment/6.png)
----
+
+### Temperature and BHI Distribution
+![Distribution](docs/deployment/6.png)
+
 ### Data Analysis
-![Dashboard4](docs/deployment/7.png)
----
-### RL Agent Training
+![Analysis](docs/deployment/7.png)
+
+### RL Agent Training - Reward Progress
 ![RL Reward Progress](docs/rl_agent/reward_1.png)
-![Safety Violations Comparison](docs/rl_agent/violations.png)
-![Policy Comparison](docs/rl_agent/policy.png)
+
+### Safety Violations Comparison
+![Safety Violations](docs/rl_agent/violations.png)
+
+### Policy Comparison
+![Policy](docs/rl_agent/policy.png)
 
 ---
 
 ## 🎯 Key Achievements
 
-✅ **High Accuracy**: 98.66% anomaly detection accuracy  
-✅ **Real-time Monitoring**: Battery health tracking with BHI  
-✅ **Intelligent Recommendations**: RL-based optimal charging strategies  
-✅ **Safety First**: 86% reduction in safety violations  
-✅ **Scalable Architecture**: Modular design for easy integration  
-✅ **User-Friendly Interface**: Interactive Streamlit dashboard  
+✓ **High Accuracy**: 98.66% anomaly detection accuracy  
+✓ **Real-time Monitoring**: Battery health tracking with BHI  
+✓ **Intelligent Recommendations**: RL-based optimal charging strategies  
+✓ **Safety First**: 86% reduction in safety violations  
+✓ **Automated Pipeline**: Apache Airflow for reliable ETL orchestration  
+✓ **Scalable Architecture**: Modular design for easy integration  
+✓ **User-Friendly Interface**: Interactive Streamlit dashboard  
+✓ **Production Ready**: Docker containerization for deployment
 
+---
 
 ## 📚 References
 
@@ -408,25 +496,7 @@ feature_cols = [
 2. [NREL Battery Failure Data](https://www.nrel.gov/transportation/battery-failure)
 3. [XGBoost Documentation](https://xgboost.readthedocs.io/)
 4. [Reinforcement Learning: Q-Learning](https://en.wikipedia.org/wiki/Q-learning)
-5. VidyutAI Hackathon 2025 Problem Statement(#-problem-statement)
+5. [Apache Airflow Documentation](https://airflow.apache.org/)
+6. VidyutAI Hackathon 2025 Problem Statement
 
 ---
-
-## 🤝 Contributing
-
-Contributions are welcome! Please feel free to submit a Pull Request.
-
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
-
----
-<div align="center">
-
-**⭐ Star this repository if you found it helpful!**
-
-Made with ❤️ for VidyutAI Hackathon 2025
-
-</div>
