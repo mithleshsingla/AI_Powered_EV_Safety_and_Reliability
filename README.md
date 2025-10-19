@@ -377,7 +377,7 @@ feature_cols = [
 ![Dashboard4](docs/deployment/4.png)
 ---
 ### ETL using Apache AIRFLOW
-![Dashboard4](docs/deployment/5.png)
+![Dashboard4](docs/deployment/airflow.png)
 ---
 ### Temprature and BHI Distribution
 ![Dashboard4](docs/deployment/6.png)
