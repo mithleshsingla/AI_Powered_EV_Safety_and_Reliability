@@ -376,6 +376,13 @@ feature_cols = [
 ### Visual_Indicators
 ![Dashboard4](docs/deployment/4.png)
 ---
+### Temprature and BHI Distribution
+![Dashboard4](docs/deployment/6.png)
+---
+### Data Analysis
+![Dashboard4](docs/deployment/7.png)
+
+---
 ### RL Agent Training
 ![RL Reward Progress](docs/rl_agent/reward_1.png)
 ![Safety Violations Comparison](docs/rl_agent/violations.png)
