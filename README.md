@@ -497,6 +497,7 @@ feature_cols = [
 3. [XGBoost Documentation](https://xgboost.readthedocs.io/)
 4. [Reinforcement Learning: Q-Learning](https://en.wikipedia.org/wiki/Q-learning)
 5. [Apache Airflow Documentation](https://airflow.apache.org/)
-6. VidyutAI Hackathon 2025 Problem Statement
+6. [VidyutAI Hackathon 2025 Problem Statement](VidyutAI_Hackathon_2025_Problem_Statement_1.pdf)
+
 
 ---
